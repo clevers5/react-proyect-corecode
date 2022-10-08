@@ -1,14 +1,13 @@
 import express from "express";
 import { initDB } from "./db/index.js";
+import { ToDosRequestHandler } from "./handlers/todos.js";
 
 const Api = express();
 
 Api.use(express.json({}));
 Api.use(express.urlencoded({ extended: false }));
 
-Api.get("/test", (req, res) => {
-  res.send({ message: "Hello World!" });
-});
+Api.use("/v1", ToDosRequestHandler);
 
 Api.listen(3000, () => {
   console.log("Server is running on port 3000");
