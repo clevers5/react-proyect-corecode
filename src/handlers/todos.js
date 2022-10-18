@@ -8,6 +8,7 @@ ToDosRequestHandler.post("/to-dos", async (req, res) => {
     const { title, description, isDone: is_done } = req.body;
     const dbHandler = await getDBHandler();
 
+    // Insert a new record into the to-dos table
     const newTodo = await dbHandler.run(`
       INSERT INTO todos (title, description, is_done) 
       VALUES (
@@ -26,6 +27,7 @@ ToDosRequestHandler.post("/to-dos", async (req, res) => {
   }
 });
 
+// Get all to-dos
 ToDosRequestHandler.get("/to-dos", async (req, res) => {
   try {
     const dbHandler = await getDBHandler();
@@ -46,6 +48,7 @@ ToDosRequestHandler.get("/to-dos", async (req, res) => {
   }
 });
 
+// Delete a to-do
 ToDosRequestHandler.delete("/to-dos/:id", async (req, res) => {
   try {
     const todoId = req.params.id;
@@ -66,18 +69,29 @@ ToDosRequestHandler.delete("/to-dos/:id", async (req, res) => {
   }
 });
 
-ToDosRequestHandler.put("/to-dos", async (req, res) => {
+// Update a to-do
+ToDosRequestHandler.patch("/to-dos/:id", async (req, res) => {
   try {
     const todoId = req.params.id;
+    const { title, description, is_done } = req.body;
     const dbHandler = await getDBHandler();
-
-    const updateTodo = await dbHandler.run(
-      `DELETE FROM todos WHERE id = ?`,
+    const todoUpdate = await dbHandler.get(
+      `SELECT * FROM todos WHERE id = ?`,
       todoId
+    );
+    let isDone = is_done ? 1 : 0;
+
+    await dbHandler.run(
+      `UPDATE todos SET title = ?, description = ?, is_done = ?
+       WHERE id = ?`,
+      title || todoUpdate.title,
+      description || todoUpdate.description,
+      isDone,
+      todoId || todoUpdate.id
     );
     await dbHandler.close();
 
-    res.send({ todoUpdate: { ...updateTodo } });
+    res.send({ todoToUpdate: { ...todoUpdate, title, description, is_done } });
   } catch {
     res.status(500).send({
       error: "Internal Server Error update the todos",
