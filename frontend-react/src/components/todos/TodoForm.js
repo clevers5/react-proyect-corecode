@@ -33,6 +33,7 @@ function TodoForm(props) {
       description,
       isDone: false,
       showDescription: false,
+      deleteAll: false,
     });
     setInput("");
     setDescription("");
@@ -78,6 +79,7 @@ function TodoForm(props) {
           <button onClick={handleSubmit} className="todo-button">
             <BsPlusCircleFill />
           </button>
+
           {showDescription && (
             <textarea
               placeholder="Description"

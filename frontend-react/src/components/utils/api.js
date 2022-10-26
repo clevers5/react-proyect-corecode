@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function getTodos() {
+async function getTodos() {
   try {
     const {
       data: { todos },
@@ -12,7 +12,7 @@ export async function getTodos() {
   }
 }
 
-export async function patchTodo(todoId, newValues) {
+async function patchTodo(todoId, newValues) {
   try {
     axios.patch(`http://localhost:3000/v1/to-dos/${todoId}`, {
       ...newValues,
@@ -23,3 +23,5 @@ export async function patchTodo(todoId, newValues) {
     return [];
   }
 }
+
+export { getTodos, patchTodo };

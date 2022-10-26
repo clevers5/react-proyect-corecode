@@ -1,12 +1,18 @@
 import React from "react";
 import "./App.css";
-import TodoList from "./components/TodoList";
+import Header from "./components/header/Header";
+import TodoList from "./components/todos/TodoList";
+import Fotter from "./components/footer/Fotter";
 
 function App() {
   return (
-    <div className="todo-app">
-      <TodoList />
-    </div> //JSX
+    <>
+      <Header />
+      <div className="todo-app ">
+        <TodoList />
+      </div>
+      <Fotter />
+    </>
   );
 }
 
